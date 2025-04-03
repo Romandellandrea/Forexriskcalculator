@@ -159,7 +159,8 @@ spline-viewer#spline-background {
 }
 
 #langToggle {
-    right: calc(var(--spacing-unit) * 3.5 + 10px);
+    /* MODIFIED: Increased spacing from theme toggle */
+    right: calc(var(--spacing-unit) * 4.5 + 15px); /* Increased multiplier */
     padding: 0.5rem 0.7rem;
     font-size: 0.8rem;
     font-weight: 600;
@@ -180,7 +181,8 @@ spline-viewer#spline-background {
     left: var(--spacing-unit);
     z-index: 10;
     font-family: var(--font-title);
-    font-size: clamp(1.6rem, 5vw, 2rem);
+    /* MODIFIED: Reduced font size significantly */
+    font-size: clamp(1.1rem, 3.5vw, 1.4rem);
     font-weight: normal;
     color: var(--title-text-color);
     transition: color 0.3s ease;
@@ -192,8 +194,7 @@ spline-viewer#spline-background {
     box-shadow: none;
     border-radius: 0;
     display: block;
-    /* Prevent title from overlapping buttons */
-    max-width: 60%; /* Adjust % as needed */
+    max-width: 60%; /* Keeps it from running into buttons */
 }
 
 
@@ -216,14 +217,7 @@ spline-viewer#spline-background {
 }
 
 /* --- Titles inside Container --- */
-h2 { /* Subtitle */
-    font-size: clamp(1.05rem, 3.5vw, 1.2rem);
-    font-weight: 500;
-    margin-bottom: calc(var(--spacing-unit) * 1.5);
-    margin-top: 0;
-    color: var(--text-color);
-    transition: color 0.3s ease;
-}
+/* DELETED: Removed h2 rule */
 
 h3 { /* Result Heading */
     font-size: clamp(0.95rem, 3vw, 1.05rem);
@@ -239,7 +233,7 @@ h3 { /* Result Heading */
 #calculatorForm { text-align: left; }
 .form-group { margin-bottom: calc(var(--spacing-unit) * 1.1); display: flex; flex-direction: column; }
 label { font-weight: 700; margin-bottom: 0.4rem; font-size: 0.85rem; color: var(--text-color-secondary); transition: color 0.3s ease;}
-input[type="number"], select { background-color: var(--input-bg); border: 1px solid var(--border-color); color: var(--text-color); padding: 0.7rem 0.85rem; border-radius: var(--border-radius-md); font-size: 0.95rem; transition: border-color 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease, color 0.3s ease; width: 100%; appearance: none; -webkit-appearance: none; -moz-appearance: textfield; box-shadow: inset 0 1px 3px rgba(0,0,0,0.05); }
+input[type="number"], select { background-color: var(--input-bg); border: 1px solid var(--border-color); color: var(--text-color); padding: 0.7rem 0.85rem; border-radius: var(--border-radius-md); font-size: 0.95rem; transition: border-color 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease, color 0.3s ease; width: 100%; appearance: none; -webkit-appearance: none; -moz-appearance: none; appearance: textfield; box-shadow: inset 0 1px 3px rgba(0,0,0,0.05); }
 select { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%23A0A0A7' viewBox='0 0 16 16'%3E%3Cpath fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 0.9rem center; background-size: 0.9rem 0.7rem; padding-right: 2.5rem; -moz-appearance: none; }
 .dark-mode select { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%23A0AEC0' viewBox='0 0 16 16'%3E%3Cpath fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/%3E%3C/svg%3E"); }
 input::placeholder { color: var(--text-color-secondary); opacity: 0.65; }
@@ -287,12 +281,11 @@ button[type="submit"]:active { transform: translateY(0); box-shadow: 0 2px 8px r
     }
 
     .main-title {
-        top: calc(var(--spacing-unit) * 0.7); /* Adjust top position */
-        left: calc(var(--spacing-unit) * 0.8); /* Adjust left position */
-        /* MODIFIED: Reduce font size further */
-        font-size: clamp(1.1rem, 4vw, 1.4rem);
-        /* MODIFIED: Limit width to prevent overlap */
-        max-width: 55vw; /* Force wrap on small screens */
+        top: calc(var(--spacing-unit) * 0.7);
+        left: calc(var(--spacing-unit) * 0.8);
+        /* MODIFIED: Further reduced font size */
+        font-size: clamp(0.9rem, 3vw, 1.1rem);
+        max-width: 55vw; /* Keep width constraint */
     }
 
     #themeToggle {
@@ -304,10 +297,9 @@ button[type="submit"]:active { transform: translateY(0); box-shadow: 0 2px 8px r
 
     #langToggle {
         top: calc(var(--spacing-unit) * 0.7);
-        /* MODIFIED: Use explicit right spacing */
-        /* Approx theme width (1rem font + 0.4+0.4 padding) ~ 1.8rem */
-        /* Add a gap, e.g., 0.5rem */
-        right: calc(var(--spacing-unit) * 0.7 + 1.8rem + 0.5rem); /* = right: 3.0rem; */
+        /* MODIFIED: Explicit right spacing with increased gap */
+        /* Approx theme width 1.8rem + gap 1rem */
+        right: calc(var(--spacing-unit) * 0.7 + 1.8rem + 1rem); /* = right: 3.5rem; (approx) */
         font-size: 0.7rem;
         padding: 0.35rem 0.5rem;
     }
@@ -319,7 +311,8 @@ button[type="submit"]:active { transform: translateY(0); box-shadow: 0 2px 8px r
         margin-top: var(--spacing-unit);
     }
 
-    h2 { font-size: clamp(1rem, 3.2vw, 1.1rem); margin-bottom: calc(var(--spacing-unit) * 1.2); }
+    /* DELETED: h2 rule was already removed */
+
     h3 { font-size: clamp(0.9rem, 2.8vw, 1rem); margin-top: calc(var(--spacing-unit) * 1.8); }
     .form-group { margin-bottom: calc(var(--spacing-unit) * 1); }
     label { font-size: 0.8rem; margin-bottom: 0.3rem; }
