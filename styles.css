@@ -1,0 +1,439 @@
+/* --- Global Reset & Box Sizing --- */
+*, *:before, *:after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    font-size: 16px; /* Base font size */
+    scroll-behavior: smooth;
+}
+
+/* --- CSS Variables --- */
+:root {
+    /* Base Spacing Unit */
+    --spacing-unit: 1rem;
+
+    /* MODIFIED: Fonts */
+    --font-body: 'Space Mono', monospace;
+    --font-title: 'Boldonse', sans-serif; /* Fallback to sans-serif */
+    --font-button: 'Source Code Pro', monospace;
+
+    /* --- Glassmorphism & Body Background --- */
+    --glass-blur: 10px;
+    --body-gradient-light: linear-gradient(135deg, #FFFFFF 0%, #E5E7EB 100%); /* White to Grey */
+    --glass-bg-light: rgba(255, 255, 255, 0.35);
+    --glass-border-light: rgba(255, 255, 255, 0.5);
+    --input-glass-bg-light: rgba(255, 255, 255, 0.6);
+    --shadow-color-light: rgba(45, 55, 72, 0.15);
+    --control-button-bg-light: rgba(255, 255, 255, 0.5);
+    --viewer-fallback-bg: transparent;
+
+    /* Light Mode Variables */
+    --bg-color: #F4F4F8;
+    --container-bg: var(--glass-bg-light);
+    /* --title-wrapper-bg: var(--glass-bg-light); DELETED */
+    --input-bg: var(--input-glass-bg-light);
+    --border-color: var(--glass-border-light);
+    --text-color: #1A202C;
+    --text-color-secondary: #4A5568;
+    --result-bg: var(--input-glass-bg-light);
+    --loader-overlay-bg: rgba(240, 240, 245, 0.6);
+    --box-shadow-color: var(--shadow-color-light);
+    --title-text-color: var(--text-color);
+
+    /* Accents & Gradients */
+    --accent-gradient-start: #6366F1;
+    --accent-gradient-end: #A855F7;
+    --accent-gradient: linear-gradient(90deg, var(--accent-gradient-start) 0%, var(--accent-gradient-end) 100%);
+    --focus-glow-color: rgba(129, 140, 248, 0.4);
+    --input-border-hover: var(--accent-gradient-start);
+
+    /* Status Colors */
+    --error-color: #E53E3E;
+    --success-color: var(--text-color);
+    --success-value-color: #2D3748;
+
+    /* Other */
+    --border-radius-lg: calc(var(--spacing-unit) * 1);
+    --border-radius-md: calc(var(--spacing-unit) * 0.6);
+}
+
+.dark-mode {
+    /* --- Glassmorphism & Body Background --- */
+    --body-gradient-dark: linear-gradient(135deg, #0F172A 0%, #38BDF8 100%); /* Dark Blue/Black to Light Blue */
+    --glass-bg-dark: rgba(45, 55, 72, 0.3);
+    --glass-border-dark: rgba(255, 255, 255, 0.15);
+    --input-glass-bg-dark: rgba(45, 55, 72, 0.55);
+    --shadow-color-dark: rgba(0, 0, 0, 0.3);
+    --control-button-bg-dark: rgba(45, 55, 72, 0.4);
+
+    /* Dark Mode Variable Overrides */
+    --bg-color: #111114;
+    --container-bg: var(--glass-bg-dark);
+    /* --title-wrapper-bg: var(--glass-bg-dark); DELETED */
+    --input-bg: var(--input-glass-bg-dark);
+    --border-color: var(--glass-border-dark);
+    --text-color: #E2E8F0;
+    --text-color-secondary: #A0AEC0;
+    --result-bg: var(--input-glass-bg-dark);
+    --loader-overlay-bg: rgba(26, 32, 44, 0.6);
+    --box-shadow-color: var(--shadow-color-dark);
+    --title-text-color: var(--text-color);
+
+    /* Status Colors Dark */
+    --error-color: #FC8181;
+    --success-color: var(--text-color);
+    --success-value-color: #F7FAFC;
+}
+
+
+/* --- Global Styles --- */
+body {
+    /* MODIFIED: Apply new body font */
+    font-family: var(--font-body);
+    background: var(--body-gradient-light);
+    color: var(--text-color);
+    margin: 0;
+    /* MODIFIED: Adjust padding, especially top, for fixed title */
+    padding: calc(var(--spacing-unit) * 5) calc(var(--spacing-unit) * 2) calc(var(--spacing-unit) * 2);
+    display: flex;
+    flex-direction: column;
+    /* Keep centering for the remaining content (.container) */
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    font-size: 1rem;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    transition: background 0.4s ease, color 0.4s ease;
+    position: relative;
+    overflow-x: hidden;
+}
+
+/* Applies the dark mode gradient when class is present */
+.dark-mode {
+    background: var(--body-gradient-dark);
+}
+
+/* --- Spline Viewer Background Styles --- */
+spline-viewer#spline-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1; /* Behind page content, above body background */
+    overflow: hidden;
+    pointer-events: none;
+    background-color: transparent; /* Shows body gradient */
+    border: none;
+    outline: none;
+    display: block;
+}
+
+/* --- Control Buttons (Viewport Fixed) --- */
+#themeToggle,
+#langToggle {
+    position: fixed;
+    top: var(--spacing-unit);
+    background: var(--control-button-bg-light);
+    color: var(--text-color-secondary);
+    border: 1px solid var(--border-color);
+    backdrop-filter: blur(calc(var(--glass-blur) / 2));
+    -webkit-backdrop-filter: blur(calc(var(--glass-blur) / 2));
+    cursor: pointer;
+    border-radius: var(--border-radius-md);
+    padding: 0.5rem;
+    line-height: 1;
+    z-index: 1000; /* Above everything else */
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px -2px var(--box-shadow-color);
+    /* MODIFIED: Apply button font */
+    font-family: var(--font-button);
+}
+
+.dark-mode #themeToggle,
+.dark-mode #langToggle {
+    background: var(--control-button-bg-dark);
+}
+
+#themeToggle {
+    right: var(--spacing-unit);
+    font-size: 1.125rem;
+}
+
+#langToggle {
+    right: calc(var(--spacing-unit) * 3.5 + 10px);
+    padding: 0.5rem 0.7rem;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+#themeToggle:hover,
+#langToggle:hover {
+    color: var(--text-color);
+    border-color: var(--text-color-secondary);
+    transform: scale(1.05) translateY(-1px);
+    box-shadow: 0 4px 12px -3px var(--box-shadow-color);
+}
+
+/* --- Title Wrapper --- */
+/* --- DELETED: Removed .title-wrapper styles --- */
+
+/* --- Container --- */
+.container {
+    background: var(--container-bg);
+    border: 1px solid var(--border-color);
+    backdrop-filter: blur(var(--glass-blur));
+    -webkit-backdrop-filter: blur(var(--glass-blur));
+    box-shadow: 0 8px 32px -4px var(--box-shadow-color);
+    padding: calc(var(--spacing-unit) * 1.8) calc(var(--spacing-unit) * 1.6);
+    width: 90%;
+    max-width: 500px;
+    border-radius: var(--border-radius-lg);
+    text-align: center;
+    position: relative; /* For loader positioning */
+    overflow: hidden;
+    transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease, backdrop-filter 0.3s ease;
+    z-index: 1; /* Ensure above background */
+    /* MODIFIED: Remove margin-bottom now that title-wrapper is gone */
+    /* margin-bottom: calc(var(--spacing-unit) * 1.5); */
+}
+
+/* --- Titles --- */
+.main-title {
+    /* MODIFIED: Position fixed top-left */
+    position: fixed;
+    top: var(--spacing-unit);
+    left: var(--spacing-unit);
+    z-index: 10; /* Above background, below controls */
+
+    /* MODIFIED: Apply title font & style */
+    font-family: var(--font-title);
+    font-size: clamp(1.6rem, 5vw, 2rem); /* Slightly smaller maybe */
+    font-weight: normal; /* Font likely includes weight */
+    color: var(--title-text-color);
+    transition: color 0.3s ease;
+
+    /* MODIFIED: Reset positioning styles */
+    margin: 0;
+    padding: 0;
+    text-align: left;
+    /* Remove properties inherited from .title-wrapper */
+    background: none;
+    border: none;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    box-shadow: none;
+    border-radius: 0;
+    display: block; /* Ensure it behaves as a block */
+}
+
+h2 { /* Subtitle */
+    font-size: clamp(1.05rem, 3.5vw, 1.2rem);
+    font-weight: 500; /* Adjust if Space Mono looks too bold/light */
+    margin-bottom: calc(var(--spacing-unit) * 1.5);
+    margin-top: 0;
+    color: var(--text-color);
+    transition: color 0.3s ease;
+}
+
+h3 { /* Result Heading */
+    font-size: clamp(0.95rem, 3vw, 1.05rem);
+    font-weight: 500; /* Adjust if Space Mono looks too bold/light */
+    margin-top: calc(var(--spacing-unit) * 2);
+    margin-bottom: var(--spacing-unit);
+    color: var(--text-color-secondary);
+    text-align: left;
+    transition: color 0.3s ease;
+}
+
+/* --- Form --- */
+#calculatorForm {
+    text-align: left;
+}
+
+.form-group {
+    margin-bottom: calc(var(--spacing-unit) * 1.1);
+    display: flex;
+    flex-direction: column;
+}
+
+label {
+    /* Inherits body font */
+    font-weight: 700; /* Make labels bolder if needed with Space Mono */
+    margin-bottom: 0.4rem;
+    font-size: 0.85rem;
+    color: var(--text-color-secondary);
+    transition: color 0.3s ease;
+}
+
+input[type="number"],
+select {
+    /* Inherits body font */
+    background-color: var(--input-bg);
+    border: 1px solid var(--border-color);
+    color: var(--text-color);
+    padding: 0.7rem 0.85rem;
+    border-radius: var(--border-radius-md);
+    font-size: 0.95rem;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease, color 0.3s ease;
+    width: 100%;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: textfield;
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);
+}
+
+select {
+    /* Keep existing arrow styling */
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%23A0A0A7' viewBox='0 0 16 16'%3E%3Cpath fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0.9rem center;
+    background-size: 0.9rem 0.7rem;
+    padding-right: 2.5rem;
+    appearance: none;
+    -moz-appearance: none;
+}
+
+.dark-mode select {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%23A0AEC0' viewBox='0 0 16 16'%3E%3Cpath fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/%3E%3C/svg%3E");
+}
+
+input::placeholder {
+    color: var(--text-color-secondary);
+    opacity: 0.65;
+}
+
+input[type="number"]:focus,
+select:focus {
+    outline: none;
+    border-color: var(--input-border-hover);
+    box-shadow: 0 0 0 3px var(--focus-glow-color), inset 0 1px 3px rgba(0,0,0,0.05);
+}
+
+/* --- Submit Button --- */
+button[type="submit"] {
+    width: 100%;
+    padding: 0.8rem;
+    background: var(--accent-gradient);
+    color: #FFFFFF;
+    font-size: 0.95rem;
+    font-weight: 600; /* Adjust weight for Source Code Pro if needed */
+    border: none;
+    border-radius: var(--border-radius-md);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: var(--spacing-unit);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    box-shadow: 0 4px 15px -3px rgba(129, 140, 248, 0.4);
+    /* MODIFIED: Apply button font */
+    font-family: var(--font-button);
+}
+
+button[type="submit"]:hover {
+    opacity: 0.9;
+    box-shadow: 0 6px 20px -3px rgba(168, 85, 247, 0.45);
+    transform: translateY(-2px);
+}
+
+button[type="submit"]:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 8px rgba(168, 85, 247, 0.3);
+}
+
+/* --- Result Box --- */
+.result-box {
+    /* Inherits body font */
+    background: var(--input-bg);
+    border: 1px solid var(--border-color);
+    color: var(--text-color);
+    padding: 1rem 1.1rem;
+    border-radius: var(--border-radius-md);
+    text-align: center;
+    font-weight: 500; /* Adjust if Space Mono looks too bold/light */
+    font-size: 0.95rem;
+    margin-top: 0.625rem;
+    min-height: 3.5rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+    word-break: break-word;
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);
+}
+
+.result-box p { margin: 0; }
+.result-box .error { color: var(--error-color); font-weight: 500; }
+.result-box .success { color: var(--success-color); }
+.result-box .success strong { color: var(--success-value-color); font-weight: 700; margin-left: 0.3rem; /* Unit name */ }
+
+/* --- Loader Animation --- */
+#loader {
+    position: absolute; /* Relative to .container */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: var(--loader-overlay-bg);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10;
+    border-radius: var(--border-radius-lg);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0s linear 0.3s;
+}
+
+#loader[style*="display: flex"] {
+     opacity: 1;
+     visibility: visible;
+     transition: opacity 0.3s ease, visibility 0s linear 0s;
+}
+
+.loader-anim-wrapper { width: 5rem; height: 5rem; position: relative; }
+.loader-box-wrap { width: 70%; height: 70%; margin: 15% 15%; position: relative; transform: rotate(-45deg); }
+.loader-box { width: 100%; height: 100%; position: absolute; left: 0; top: 0; background: var(--accent-gradient); background-position: 0% 50%; background-size: 1000% 1000%; visibility: hidden; }
+.loader-box.one   { animation: moveGradient 15s infinite linear, oneMove 3.5s infinite; }
+.loader-box.two   { animation: moveGradient 15s infinite linear, twoMove 3.5s .15s infinite; }
+.loader-box.three { animation: moveGradient 15s infinite linear, threeMove 3.5s .3s infinite; }
+.loader-box.four  { animation: moveGradient 15s infinite linear, fourMove 3.5s .575s infinite; }
+.loader-box.five  { animation: moveGradient 15s infinite linear, fiveMove 3.5s .725s infinite; }
+.loader-box.six   { animation: moveGradient 15s infinite linear, sixMove 3.5s .875s infinite; }
+
+@keyframes moveGradient { to { background-position: 100% 50%; } }
+/* Loader box movement keyframes (omitted for brevity - unchanged) */
+@keyframes oneMove{0%,14.2857%{visibility:visible;clip-path:inset(0% 35% 70% round 5%);animation-timing-function:cubic-bezier(.86,0,.07,1)}28.5714%{visibility:visible;clip-path:inset(35% round 5%);animation-timing-function:cubic-bezier(.86,0,.07,1)}42.8571%,57.1428%{visibility:visible;clip-path:inset(35% 70% 35% 0 round 5%);animation-timing-function:cubic-bezier(.86,0,.07,1)}71.4285%,85.7142%{visibility:visible;clip-path:inset(0% 70% 70% 0 round 5%);animation-timing-function:cubic-bezier(.86,0,.07,1)}100%{visibility:visible;clip-path:inset(0% 35% 70% round 5%);animation-timing-function:cubic-bezier(.86,0,.07,1)}}@keyframes twoMove{0%,14.2857%{visibility:visible;clip-path:inset(0% 70% 70% 0 round 5%);animation-timing-function:cubic-bezier(.86,0,.07,1)}28.5714%,42.8571%{visibility:visible;clip-path:inset(0% 35% 70% round 5%);animation-timing-function:cubic-bezier(.86,0,.07,1)}57.1428%{visibility:visible;clip-path:inset(35% round 5%);animation-timing-function:cubic-bezier(.86,0,.07,1)}71.4285%,85.7142%{visibility:visible;clip-path:inset(35% 70% 35% 0 round 5%);animation-timing-function:cubic-bezier(.86,0,.07,1)}100%{visibility:visible;clip-path:inset(0% 70% 70% 0 round 5%);animation-timing-function:cubic-bezier(.86,0,.07,1)}}@keyframes threeMove{0%,14.2857%{visibility:visible;clip-path:inset(35% 70% 35% 0 round 5%);animation-timing-function:cubic-bezier(.86,0,.07,1)}28.5714%,42.8571%{visibility:visible;clip-path:inset(0% 70% 70% 0 round 5%);animation-timing-function:cubic-bezier(.86,0,.07,1)}57.1428%,71.4285%{visibility:visible;clip-path:inset(0% 35% 70% round 5%);animation-timing-function:cubic-bezier(.86,0,.07,1)}85.7142%{visibility:visible;clip-path:inset(35% round 5%);animation-timing-function:cubic-bezier(.86,0,.07,1)}100%{visibility:visible;clip-path:inset(35% 70% 35% 0 round 5%);animation-timing-function:cubic-bezier(.86,0,.07,1)}}@keyframes fourMove{0%,14.2857%{visibility:visible;clip-path:inset(35% 0% 35% 70% round 5%);animation-timing-function:cubic-bezier(.86,0,.07,1)}28.5714%{visibility:visible;clip-path:inset(35% round 5%);animation-timing-function:cubic-bezier(.86,0,.07,1)}42.8571%,57.1428%{visibility:visible;clip-path:inset(70% 35% 0% 35% round 5%);animation-timing-function:cubic-bezier(.86,0,.07,1)}71.4285%,85.7142%{visibility:visible;clip-path:inset(70% 0 0 70% round 5%);animation-timing-function:cubic-bezier(.86,0,.07,1)}100%{visibility:visible;clip-path:inset(35% 0% 35% 70% round 5%);animation-timing-function:cubic-bezier(.86,0,.07,1)}}@keyframes fiveMove{0%,14.2857%{visibility:visible;clip-path:inset(70% 0 0 70% round 5%);animation-timing-function:cubic-bezier(.86,0,.07,1)}28.5714%,42.8571%{visibility:visible;clip-path:inset(35% 0% 35% 70% round 5%);animation-timing-function:cubic-bezier(.86,0,.07,1)}57.1428%{visibility:visible;clip-path:inset(35% round 5%);animation-timing-function:cubic-bezier(.86,0,.07,1)}71.4285%,85.7142%{visibility:visible;clip-path:inset(70% 35% 0% 35% round 5%);animation-timing-function:cubic-bezier(.86,0,.07,1)}100%{visibility:visible;clip-path:inset(70% 0 0 70% round 5%);animation-timing-function:cubic-bezier(.86,0,.07,1)}}@keyframes sixMove{0%,14.2857%{visibility:visible;clip-path:inset(70% 35% 0% 35% round 5%);animation-timing-function:cubic-bezier(.86,0,.07,1)}28.5714%,42.8571%{visibility:visible;clip-path:inset(70% 0 0 70% round 5%);animation-timing-function:cubic-bezier(.86,0,.07,1)}57.1428%,71.4285%{visibility:visible;clip-path:inset(35% 0% 35% 70% round 5%);animation-timing-function:cubic-bezier(.86,0,.07,1)}85.7142%{visibility:visible;clip-path:inset(35% round 5%);animation-timing-function:cubic-bezier(.86,0,.07,1)}100%{visibility:visible;clip-path:inset(70% 35% 0% 35% round 5%);animation-timing-function:cubic-bezier(.86,0,.07,1)}}
+
+
+/* --- Responsive Adjustments --- */
+@media (max-width: 600px) {
+    html { font-size: 15px; }
+    body {
+        /* Adjust padding for smaller screens, ensure title has space */
+        padding: calc(var(--spacing-unit) * 4) var(--spacing-unit) var(--spacing-unit);
+    }
+    /* Adjust title position slightly for smaller screens if needed */
+    .main-title {
+        top: calc(var(--spacing-unit)*0.8);
+        left: calc(var(--spacing-unit)*0.8);
+        font-size: clamp(1.4rem, 5vw, 1.8rem); /* Adjust size */
+    }
+    /* .title-wrapper styles already deleted */
+    .container { padding: calc(var(--spacing-unit) * 1.4) var(--spacing-unit); max-width: 95%; }
+    h2 { margin-bottom: calc(var(--spacing-unit) * 1.2); }
+    h3 { margin-top: calc(var(--spacing-unit) * 1.8); }
+    input[type="number"], select, button[type="submit"], .result-box { font-size: 0.9rem; }
+    button[type="submit"] { padding: 0.75rem; }
+    .result-box { min-height: 3.2rem; padding: 0.9rem; }
+    .loader-anim-wrapper { width: 4rem; height: 4rem; }
+    #themeToggle { top: 0.7rem; right: 0.7rem; font-size: 1rem; padding: 0.4rem; }
+    #langToggle { top: 0.7rem; right: calc(0.7rem + 1.1rem + 0.7rem + 8px); font-size: 0.75rem; padding: 0.4rem 0.6rem; }
+}

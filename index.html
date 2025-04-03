@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Forex Risk Calculator</title>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Boldonse&family=Source+Code+Pro:ital,wght@0,200..900;1,200..900&family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="styles.css">
+    
+        <script type="module" src="https://unpkg.com/@splinetool/viewer@1.9.82/build/spline-viewer.js"></script>
+    </head>
+<body>
+
+    <spline-viewer
+        id="spline-background"
+        loading-anim-type="none"
+        url="https://prod.spline.design/V1NN1XQgUPGa63B6/scene.splinecode">
+        </spline-viewer>
+
+    <button id="themeToggle" data-translate-key-aria="ariaThemeButtonDark" aria-label="Activate dark mode">🌙</button>
+    <button id="langToggle" data-lang="en" data-translate-key-aria="ariaLangButton" aria-label="Switch language">EN</button>
+
+    <div id="loader" style="display: none;">
+        <div class="loader-anim-wrapper">
+            <div class="loader-box-wrap">
+                <div class="loader-box one"></div> <div class="loader-box two"></div>
+                <div class="loader-box three"></div> <div class="loader-box four"></div>
+                <div class="loader-box five"></div> <div class="loader-box six"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="title-wrapper">
+        <h1 class="main-title" data-translate-key="mainTitle">Forex Risk Calculator</h1>
+    </div>
+
+    <div class="container">
+        <h2 data-translate-key="subTitle">CFD Position Size Calculator</h2>
+
+        <form id="calculatorForm" novalidate>
+            <div class="form-group">
+                <label for="accountBalance" data-translate-key="labelBalance">Account Balance (USD):</label>
+                <input type="number" id="accountBalance" data-translate-key-placeholder="placeholderBalance" placeholder="e.g., 10000" step="any" required>
+            </div>
+
+            <div class="form-group">
+                <label for="riskType" data-translate-key="labelRiskType">Risk Type:</label>
+                <select id="riskType" required>
+                    <option value="percentage" data-translate-key="optionPercentage">Risk in Percentage (%)</option>
+                    <option value="fixed" data-translate-key="optionFixed">Risk in Fixed Amount ($)</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="riskValue" data-translate-key="labelRiskValue">Risk Value:</label>
+                <input type="number" id="riskValue" data-translate-key-placeholder="placeholderRiskValuePercent" placeholder="e.g., 1 (for 1%)" step="any" required>
+            </div>
+
+            <div class="form-group">
+                <label for="stopLoss" data-translate-key="labelStopLoss">Stop-Loss (pips):</label>
+                <input type="number" id="stopLoss" data-translate-key-placeholder="placeholderStopLoss" placeholder="e.g., 50" step="any" required>
+            </div>
+
+            <div class="form-group">
+                <label for="instrument" data-translate-key="labelInstrument">Instrument:</label>
+                <select id="instrument" required>
+                    <option value="" disabled selected data-translate-key="selectInstrumentPlaceholder">Select Instrument...</option>
+                    <option value="XAUUSD" data-translate-key="instrumentGold">XAUUSD (Gold)</option>
+                    <option value="BTCUSD" data-translate-key="instrumentBitcoin">BTCUSD (Bitcoin)</option>
+                </select>
+            </div>
+
+            <button type="submit" data-translate-key="calculateButton">Calculate Position Size</button>
+        </form>
+
+        <h3 data-translate-key="resultHeading">Calculated Position Size:</h3>
+        <div class="result-box" id="resultBox" data-translate-key="resultInitial">
+            Result will appear here.
+        </div>
+    </div> <script src="script.js"></script>
+
+</body>
+</html>
